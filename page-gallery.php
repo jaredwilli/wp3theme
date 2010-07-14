@@ -18,7 +18,7 @@
 					<?php $s->mshot(200); ?>
 				</a>
 			<div class="shadow notext">&nbsp;</div>
-			<h2><a href="<?php the_permalink( ); ?>"><?php the_title(); ?></a></h2>
+			<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 			<?php // Don't show the avatar if the previous post was by the same user
 			$current_user_id = get_the_author_ID( );
 			if( $previous_user_id !== $current_user_id ) {

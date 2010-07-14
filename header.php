@@ -38,7 +38,16 @@
 	<div id="shell">
 		<nav id="mainmenu">
 			<ul class="menu-top">
-				<li><?php wp_nav_menu( array('menu' => 'Main Menu' )); ?></li>
+			<?php if (is_user_logged_in()) { ?>			
+			<?php global $current_user; get_currentuserinfo(); ?>
+				<li><a href="<?php echo site_url(); ?>/profile/<?php echo $current_user->user_nicename; ?>/">My Profile</a></li>
+				<li><a href="<?php echo site_url(); ?>/author/<?php echo $current_user->user_nicename; ?>/">My Posts</a></li>
+				<li><a href="<?php echo site_url(); ?>/wp-admin/">Settings</a></li>
+				<li><a href="#TB_inline?height=470&amp;width=500&amp;inlineId=dialog" class="thickbox" title="Submit">Submit</a></li>
+				<li><a href="<?php echo wp_logout_url(home_url()); ?>">Logout</a></li>
+			<?php } else { ?>
+				<li><a href="#TB_inline?height=300&amp;width=400&amp;inlineId=dialog" class="thickbox" title="Login">Login</a></li>
+			<?php } ?>
 			</ul>
 		</nav>
 		<header role="head">
@@ -50,18 +59,6 @@
 		<nav id="nav">
 			<ul class="cat-nav">
 				<li><?php wp_nav_menu( array('menu' => 'Sub Menu' )); ?></li>
-			</ul>
-			<ul class="user-nav">
-			<?php if (is_user_logged_in()) { ?>			
-			<?php global $current_user; get_currentuserinfo(); ?>
-				<li><a href="<?php echo site_url(); ?>/wp-admin/profile.php">My Profile</a></li>
-				<li><a href="<?php echo site_url(); ?>/author/<?php echo $current_user->username; ?>/">My Posts</a></li>
-				<li><a href="<?php echo site_url(); ?>/wp-admin/">Settings</a></li>
-				<li><a href="#TB_inline?height=470&amp;width=500&amp;inlineId=dialog" class="thickbox" title="Submit">Submit</a></li>
-				<li><a href="<?php echo wp_logout_url(home_url()); ?>">Logout</a></li>
-			<?php } else { ?>
-				<li><a href="#TB_inline?height=300&amp;width=400&amp;inlineId=dialog" class="thickbox" title="Login">Login</a></li>
-			<?php } ?>
 			</ul>
 		</nav>
 	</div>

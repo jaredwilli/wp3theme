@@ -3,29 +3,29 @@
 
 <section id="bottom">
 	<div id="shell">
-		<div class="footnav">
-			<nav class="widget col">
-				<ul>
-					<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterLeft)) : ?><?php endif; ?>
-				</ul> 
-			</nav>
-			<nav class="widget widget_links">
-				<ul>
-					<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterCenter)) : ?><?php endif; ?>
-				</ul>    
-			</nav>
-			<nav class="widget col-last">
-				<ul>
-					<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterRight)) : ?><?php endif; ?>
-				</ul>    
-			</nav>
-		</div>
+		<nav class="widgetbox">
+			<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterLeft)) : endif; ?>
+		</nav>
+		<nav class="widgetbox">
+			<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterCenter)) : endif;?>
+		</nav>
+		<nav class="widgetbox">
+			<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterRight)) : endif; ?>
+		</nav>
 
 		<footer id="footer" role="contentinfo">			
 			<div class="copy">
 				Copyright &copy;<?php echo date(Y); ?> 
-				<a href="<?php bloginfo('url'); ?>" title="<?php bloginfo('title'); ?>"><?php bloginfo('title'); ?></a>
-				<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterCopyright)) : ?><?php endif; ?>
+				<a href="<?php home_url(); ?>" title="<?php bloginfo('title'); ?>"><?php bloginfo('title'); ?></a>
+
+			<?php // if(function_exists('dynamic_sidebar') && dynamic_sidebar(FooterCopyright)) : endif; ?>
+			
+			<!--
+			<ul class="foot-nav">
+				<li><?php wp_nav_menu( array('menu' => 'Main Menu' )); ?></li>
+			</ul>
+			-->
+				
 			</div>	
 		</footer><!-- // End Footer -->
 	</div>

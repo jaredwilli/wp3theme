@@ -41,6 +41,7 @@
 				<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(Sidebar1)) : ?><?php endif; ?>			
 			</ul> 
 		</nav>
+<!-- Additional sidebar widgetized sections
 		<nav>
 			<ul>
 				<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(Sidebar3)) : ?><?php endif; ?>			
@@ -52,5 +53,5 @@
 				<?php if(function_exists('dynamic_sidebar') && dynamic_sidebar(Sidebar4)) : ?><?php endif; ?>			
 			</ul>    
 		</nav>
-		
+-->		
 	</aside>

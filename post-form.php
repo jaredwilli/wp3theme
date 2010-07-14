@@ -1,19 +1,20 @@
 <?php
+$insert = new siteSubmit();
 
 if( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] )) {
 		$post = array(
 			'post_title'	=> $_POST['title'],
 			'description'	=> $_POST['description'],
-			'siteS-url'		=> $_POST['site'],
+			'siteurl'		=> $_POST['site'],
 			'cat'			=> $_POST['category'],
 			'labels'		=> $_POST['lbls'],
 			'post_status'	=> 'publish',
 			'post_type'		=> $_POST['post_type']
 		);
 		wp_insert_post($post);
-	wp_redirect($_POST['redirect_to']);
+		
+		$insert->template_redirect();
 }
-$insert = new siteSubmit();
 $insert->wp_insert_post($post);
 
 // do_action('wp_insert_post', 'wp_insert_post');
@@ -35,8 +36,9 @@ $insert->wp_insert_post($post);
 					<div id="media-buttons" class="hide-if-no-js"><?php echo N2::media_buttons2(); ?></div>
 					<p><label for="title">Title:</label> 
 						<input type="text" name="title" id="title" tabindex="1" size="30" value="" /></p>
-					<p><label for="site">Site:</label> 
-						<input value="" name="site" id="site" onkeyup="siteValue(this.value)" tabindex="2" size="30" /> <div id="mshot"></div></p>
+					<p><label for="siteurl">Site:</label> 
+						<input value="" name="siteurl" id="siteurl" onkeyup="siteValue(this.value)" tabindex="2" size="30" /> 
+						<div id="mshot"></div></p>
 							
 					<p><label for="description">Description:</label><br />
 					<textarea class="expand70-200" name="description" id="description" tabindex="3" rows="4" cols="45"></textarea></p>

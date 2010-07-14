@@ -11,7 +11,8 @@ function pTypesInit() {
 
 /*** Sites Post Type ***/
 class siteSubmit {
-    public $meta_fields = array("title", "description", "siteS-url");
+    public $meta_fields = array("title", "description", "siteurl");
+	public $siteurl = '';
 	
     function siteSubmit() {
         $sitelabels = array(
@@ -40,7 +41,7 @@ class siteSubmit {
         $columns = array(
                 "cb" 		=> "<input type=\"checkbox\" />",
                 "title" 	=> "Site Title",
-                "url" 		=> "URL",
+                "siteurl" 		=> "URL",
                 "description"   => "Description",
                 "sitetags" 	=> "Tags"
         );
@@ -51,9 +52,9 @@ class siteSubmit {
         switch ($column) {
             case "title" : the_title();
                 break;
-            case "url" : $custom = get_post_custom();
-                $img = 'http://s.wordpress.com/mshots/v1/' . urlencode($custom["siteS-url"][0]);
-                echo '<img src="' . $url . '" width="50" />';
+            case "siteurl" : $custom = get_post_custom();
+                $img = 'http://s.wordpress.com/mshots/v1/' . urlencode($custom["siteurl"][0]);
+                echo '<img src="' . $img . '" width="50" />';
                 break;
             case "description": the_content();
                 break;
@@ -69,11 +70,11 @@ class siteSubmit {
         }
     }
     function admin_init() {
-        add_meta_box("siteS-meta", "Site", array(&$this, "meta_options"), "site", "side", "low");
+        add_meta_box("siteS-meta", "Site", array(&$this, "meta_options"), "site", "side", "high");
     }
     function save_details() {
         global $post;
-        update_post_meta($post->ID, "siteS_url", $_POST["siteS_url"]);
+        update_post_meta($post->ID, "siteurl", $_POST["siteurl"]);
     }
     function wp_insert_post($post_id, $post = null) {
         if ($post->post_type == "site") {
@@ -94,38 +95,54 @@ class siteSubmit {
             }
         }
     }
+	// Admin post meta contents
 	public function meta_options() {
 		global $post, $url;
 		$custom = get_post_custom($post->ID);
-		$url = $custom["siteS-url"][0];		
-		$myurl = trailingslashit( get_post_meta( $post->ID, 'siteS-url', true ) );
+		$url = $custom["siteurl"][0];		
+		$myurl = trailingslashit( get_post_meta( $post->ID, 'siteurl', true ) );
 		if ( $myurl != '' ) {
 		/* validate url
 		/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/
 		*/
 			if ( preg_match( "/http(s?):\/\//", $myurl )) {
-				$siteurl = get_post_meta( $post->ID, 'siteS-url', true );
-				$newurl = 'http://s.wordpress.com/mshots/v1/' . urlencode( $myurl );
+				$siteurl = get_post_meta( $post->ID, 'siteurl', true );
+				$mshoturl = 'http://s.wordpress.com/mshots/v1/' . urlencode( $myurl );
 			} else {
-				$siteurl = 'http://' . get_post_meta( $post->ID, 'siteS-url', true );
-				$newurl .= 'http://s.wordpress.com/mshots/v1/' . urlencode( 'http://' . $myurl );
+				$siteurl = 'http://' . get_post_meta( $post->ID, 'siteurl', true );
+				$mshoturl .= 'http://s.wordpress.com/mshots/v1/' . urlencode( 'http://' . $myurl );
 			}
+			$imgsrc  = '<img src="' . $mshoturl . '?w=250" alt="' . $title . '" title="' . $title . '" />';
 		} ?>
-		
-		<p><label>Clean Url: 
-		<input id="siteS-url" size="26" name="siteS-url" value="<?php echo $url; ?>" /></label></p>
-		<p><label>Mshot Url: 
-		<input id="newurl" size="26" name="newurl" value="<?php echo $newurl; ?>" /></label></p>
-		<p><a href="<?php echo $url; ?>"><img src="<?php echo $newurl . '?w=250'; ?>" alt="<?php echo $title; ?>' title="<?php echo $title; ?>" /></a></p>
-	<?php 		
+		<p><label>Clean Url: <input id="siteurl" size="26" name="siteurl" value="<?php echo $url; ?>" /></label></p>
+		<p><label>Mshot Url: <input id="mshoturl" size="26" name="mshoturl" value="<?php echo $mshoturl; ?>" /></label></p>
+		<p><?php echo '<a href="'.$siteurl.'">'.$imgsrc.'</a>'; ?></p>
+	<?php
+	} // end meta options
+
+
+    public function mshot($mshotsize) {
+        global $post, $url;
+        $imgWidth = $mshotsize;
+        $myurl = get_post_meta($post->ID, 'siteurl', true);
+        if ( !empty($myurl) && preg_match('/http(s?):\/\//', $myurl) ) {
+            $siteurl = get_post_meta($post->ID, 'siteurl', true);
+            $newurl = "http://s.wordpress.com/mshots/v1/".urlencode($myurl);
+        	echo '<img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" />';
+		} else {
+			echo '<img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" />';
+        
+        return;
+    	}
 	}
+
 /*
     public function meta_options() {
         global $post, $url;
         $custom = get_post_custom($post->ID);
-        $url = $custom["siteS-url"][0];
+        $url = $custom["siteurl"][0];
         $valid = "/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \?=.-]*)*\/?$/";
-        $myurl = get_post_meta( $post->ID, 'siteS-url', true );
+        $myurl = get_post_meta( $post->ID, 'siteurl', true );
 
         if ( !empty($myurl) && preg_match($valid, $myurl) ) {
             $enc_url = urlencode( $myurl );
@@ -133,45 +150,32 @@ class siteSubmit {
             return;
         }
         ?>
-<p><label>Site Url: <input id="siteS-url" size="26" name="siteS-url" value="<?php echo $url; ?>" /></label></p>
+<p><label>Site Url: <input id="siteurl" size="26" name="siteurl" value="<?php echo $url; ?>" /></label></p>
 <p><label>Mshot Url: <input id="newurl" size="26" name="newurl" value="<?php echo $newurl; ?>" /></label></p>
         <?php
         echo '<p><a href="'.$url.'"><img src="'.$newurl.'?w=250" alt="'.get_the_title().'" title="'.get_the_title().'" /></a></p>';
     }
-*/
+*
 
 	
 	// mshot image
 	public function mshot($mshotsize) {		
 		global $post, $url;
 		$imgWidth = $mshotsize;
-		$myurl = get_post_meta($post->ID, 'siteS-url', true);
+		$myurl = get_post_meta($post->ID, 'siteurl', true);
 		if ($myurl != '') {
 			if (preg_match("/http(s?):\/\//", $myurl)) {
-				$siteurl = get_post_meta($post->ID, 'siteS-url', true);
+				$siteurl = get_post_meta($post->ID, 'siteurl', true);
 				$newurl = 'http://s.wordpress.com/mshots/v1/' . urlencode($myurl) . '?w=' . $imgWidth; 			} else {
-				$siteurl = 'http://' . get_post_meta($post->ID, 'siteS-url', true);
+				$siteurl = 'http://' . get_post_meta($post->ID, 'siteurl', true);
 				$newurl = 'http://s.wordpress.com/mshots/v1/' . urlencode('http://' .$myurl) . '?w=' . $imgWidth;
 			}
 			echo '<img src="' . $newurl . '" alt="' . get_the_title() . '" title="' . get_the_title() . '" />';
 			return;
 		}
 	} // end mshot()
-/*
-    public function mshot($mshotsize) {
-        global $post, $url;
-        $imgWidth = $mshotsize;
-        $myurl = get_post_meta($post->ID, 'siteS-url', true);
-        if ( !empty($myurl) && preg_match('/http(s?):\/\//', $myurl) ) {
-            $siteurl = get_post_meta($post->ID, 'siteS-url', true);
-            $newurl = "http://s.wordpress.com/mshots/v1/".urlencode($myurl);
-        	echo '<a href="'.$url.'"><img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" /></a>';
-		} else {
-			echo '<a href="'.$url.'"><img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" /></a>';
-        
-        return;
-    }
 */
+
 }
 
 

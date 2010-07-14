@@ -110,7 +110,7 @@ class siteSubmit {
 				$mshoturl = 'http://s.wordpress.com/mshots/v1/' . urlencode( $myurl );
 			} else {
 				$siteurl = 'http://' . get_post_meta( $post->ID, 'siteurl', true );
-				$mshoturl .= 'http://s.wordpress.com/mshots/v1/' . urlencode( 'http://' . $myurl );
+				$mshoturl = 'http://s.wordpress.com/mshots/v1/' . urlencode( 'http://' . $myurl );
 			}
 			$imgsrc  = '<img src="' . $mshoturl . '?w=250" alt="' . $title . '" title="' . $title . '" />';
 		} ?>
@@ -125,15 +125,18 @@ class siteSubmit {
         global $post, $url;
         $imgWidth = $mshotsize;
         $myurl = get_post_meta($post->ID, 'siteurl', true);
-        if ( !empty($myurl) && preg_match('/http(s?):\/\//', $myurl) ) {
-            $siteurl = get_post_meta($post->ID, 'siteurl', true);
-            $newurl = "http://s.wordpress.com/mshots/v1/".urlencode($myurl);
-        	echo '<img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" />';
-		} else {
-			echo '<img src="'.$newurl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" />';
+		if ( $myurl != '' ) {
+			if ( preg_match( "/http(s?):\/\//", $myurl )) {
+				$siteurl = get_post_meta( $post->ID, 'siteurl', true );
+				$mshoturl = 'http://s.wordpress.com/mshots/v1/' . urlencode( $myurl );
+			} else {
+				$siteurl = 'http://' . get_post_meta( $post->ID, 'siteurl', true );
+				$mshoturl = 'http://s.wordpress.com/mshots/v1/' . urlencode( 'http://' . $myurl );
+			}
+		}
+        echo '<img src="'.$mshoturl.'?w='.$imgWidth.'" alt="'.get_the_title().'" title="'.get_the_title().'" />';
         
         return;
-    	}
 	}
 
 /*
